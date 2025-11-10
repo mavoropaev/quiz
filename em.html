@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Электромагнитные колебания</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>Тест: Электромагнитные колебания</h1>
+<p>Выбери один вариант ответа. Нажми <b>Проверить</b>.</p>
+<div id="quiz"></div>
+
+<div>
+  <button id="checkBtn">Проверить</button>
+  <button id="showAnswers">Показать ответы</button>
+  <button id="resetBtn">Сброс</button>
+</div>
+
+<div id="result" class="score"></div>
+<a href="index.html">← Вернуться в меню</a>
+
+<script>
+// Вопросы
+const questions = [
+{q:'Уравнение LC-контура', opts:['Lq¨ + q/C = 0','q¨ + LC q = 0','q¨ - L/C q = 0'], a:0, exp:'L q¨ + q/C = 0.'},
+{q:'Аналог массы m в LC', opts:['C','L','1/C'], a:1, exp:'m ↔ L (индуктивность).'},
+{q:'Фазовый сдвиг I относительно q', opts:['I опережает q на +π/2','I отстаёт на -π/2','I в фазе с q'], a:0, exp:'I = q̇, опережение на +π/2.'},
+{q:'Резонанс в последовательной цепи', opts:['X_L = X_C','R = 0','X_L >> X_C'], a:0, exp:'В резонансе X_L = X_C.'},
+{q:'Фазовый сдвиг U_L относительно I', opts:['+π/2','-π/2','0'], a:0, exp:'U_L опережает ток на +π/2.'},
+{q:'Фазовый сдвиг U_C относительно I', opts:['-π/2','+π/2','0'], a:0, exp:'U_C отстаёт от тока на -π/2.'},
+{q:'Средняя активная мощность в цепи', opts:['P = U_rms I_rms cosφ','P = U_rms I_rms sinφ','P = U_rms I_rms'], a:0, exp:'P = UI cosφ.'},
+{q:'Добротность контура через L, R, ω0', opts:['Q = ω0 L / R','Q = R / (ω0 L)','Q = L / R'], a:0, exp:'Q = ω0 L / R.'}
+];
+
+// Рендер
+const quizDiv = document.getElementById('quiz');
+questions.forEach((qq,i)=>{
+  const d=document.createElement('div'); d.className='q';
+  d.innerHTML=`<strong>Вопрос ${i+1}.</strong> ${qq.q}<div></div>`;
+  qq.opts.forEach((opt,j)=>{
+    const label=document.createElement('label'); label.style.display='block';
+    label.innerHTML=`<input type="radio" name="q${i}" value="${j}"> ${opt}`;
+    d.appendChild(label);
+  });
+  const expDiv=document.createElement('div'); expDiv.className='explain'; expDiv.id=`exp${i}`;
+  d.appendChild(expDiv);
+  quizDiv.appendChild(d);
+});
+
+// Функции
+function check(){let score=0;questions.forEach((qq,i)=>{const els=document.getElementsByName('q'+i);let chosen=-1;for(const el of els) if(el.checked) chosen=parseInt(el.value);const expDiv=document.getElementById('exp'+i); expDiv.style.display='block'; if(chosen===qq.a){ expDiv.innerHTML=`<div class="correct">Правильно</div><div>${qq.exp}</div>`; score++; } else if(chosen===-1){ expDiv.innerHTML=`<div class="wrong">Не отвечено</div><div>Верный ответ: <b>${qq.opts[qq.a]}</b>. ${qq.exp}</div>`; } else { expDiv.innerHTML=`<div class="wrong">Неправильно</div><div>Верный ответ: <b>${qq.opts[qq.a]}</b>. ${qq.exp}</div>`; }}); document.getElementById('result').innerHTML=`Ваш результат: <b>${score}/${questions.length}</b>`;}
+function showAnswers(){questions.forEach((qq,i)=>{const expDiv=document.getElementById('exp'+i); expDiv.style.display='block'; expDiv.innerHTML=`Верный ответ: <b>${qq.opts[qq.a]}</b>. ${qq.exp}`;});document.getElementById('result').innerHTML='';}
+function resetQuiz(){questions.forEach((qq,i)=>{const els=document.getElementsByName('q'+i); for(const el of els) el.checked=false; document.getElementById('exp'+i).style.display='none';}); document.getElementById('result').innerHTML='';}
+
+document.getElementById('checkBtn').addEventListener('click', check);
+document.getElementById('showAnswers').addEventListener('click', showAnswers);
+document.getElementById('resetBtn').addEventListener('click', resetQuiz);
+</script>
+</body>
+</html>
